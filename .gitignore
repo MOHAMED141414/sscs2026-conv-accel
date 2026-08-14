@@ -1,0 +1,4 @@
+build/
+*.vcd
+vectors/
+__pycache__/

@@ -1,0 +1,221 @@
+//=============================================================================
+// conv_accel.v  -  Streaming NxN convolution core
+// IEEE SSCS Egypt Chapter 2026 Student Design Competition
+//
+// Throughput : 1 output pixel / cycle (fully pipelined, no stalls)
+// Border     : VALID (no padding). out = (H-N+1) x (W-N+1)
+// Arithmetic : uint8 pixel x int8 coeff -> int17 product
+//              -> row sums -> ACC_W accumulator -> saturate int16 -> ReLU
+//
+// Pipeline (3 registered stages after the window):
+//   S1 : products          p[i] = window[i] * coeff[i]
+//   S2 : row sums          rs[r] = sum of N products in row r
+//   S3 : total + saturate + optional ReLU
+//
+// Line buffers are true shift registers (depth IMG_W) so Xilinx infers
+// SRL32/SRL16 in LUTs rather than allocating BRAM. This is deliberate:
+// the competition FoM charges 100 penalty units per BRAM.
+//=============================================================================
+
+`timescale 1ns / 1ps
+`default_nettype none
+
+module conv_accel #(
+    parameter integer IMG_W   = 32,   // input width  (line buffer depth)
+    parameter integer IMG_H   = 32,   // input height
+    parameter integer N       = 3,    // kernel dimension (N x N)
+    parameter integer PIX_W   = 8,    // input pixel width  (unsigned)
+    parameter integer COEF_W  = 8,    // kernel coeff width (signed)
+    parameter integer OUT_W   = 16,   // output width (signed, saturated)
+    // product = (PIX_W+1) signed x COEF_W signed
+    parameter integer PROD_W  = PIX_W + COEF_W + 1,
+    // headroom to sum N*N products without internal overflow
+    parameter integer ACC_W   = PROD_W + 5
+)(
+    input  wire                      clk,
+    input  wire                      rst,        // synchronous, active high
+
+    // ---- kernel coefficient load port -------------------------------------
+    input  wire                      coef_we,
+    input  wire [$clog2(N*N)-1:0]    coef_addr,  // row-major: r*N + c
+    input  wire signed [COEF_W-1:0]  coef_din,
+
+    // ---- control ----------------------------------------------------------
+    input  wire                      relu_en,
+
+    // ---- pixel stream in --------------------------------------------------
+    input  wire                      in_valid,
+    input  wire [PIX_W-1:0]          in_pixel,
+
+    // ---- feature map out --------------------------------------------------
+    output reg                       out_valid,
+    output reg  signed [OUT_W-1:0]   out_pixel
+);
+
+    localparam integer TAPS      = N * N;
+    localparam integer OUT_MAX   =  (1 <<< (OUT_W-1)) - 1;   //  32767
+    localparam integer OUT_MIN   = -(1 <<< (OUT_W-1));       // -32768
+
+    integer i, r, c;
+    genvar  gi, gr, gc;
+
+    //-------------------------------------------------------------------------
+    // Kernel coefficient register file (programmable)
+    //-------------------------------------------------------------------------
+    reg signed [COEF_W-1:0] coeff [0:TAPS-1];
+
+    always @(posedge clk) begin
+        if (coef_we)
+            coeff[coef_addr] <= coef_din;
+    end
+
+    //-------------------------------------------------------------------------
+    // Line buffers: N-1 chained shift registers, each IMG_W deep.
+    // lb[k] output = pixel from (k+1) rows earlier, same column.
+    //-------------------------------------------------------------------------
+    reg  [PIX_W-1:0] lb     [0:N-2][0:IMG_W-1];
+    wire [PIX_W-1:0] lb_out [0:N-2];
+    wire [PIX_W-1:0] lb_in  [0:N-2];
+
+    generate
+        for (gr = 0; gr < N-1; gr = gr + 1) begin : g_linebuf
+            assign lb_out[gr] = lb[gr][IMG_W-1];
+
+            // first buffer is fed by the incoming stream,
+            // each subsequent one by the tail of the previous
+            if (gr == 0) begin : g_first
+                assign lb_in[gr] = in_pixel;
+            end else begin : g_chain
+                assign lb_in[gr] = lb_out[gr-1];
+            end
+
+            always @(posedge clk) begin
+                if (in_valid) begin
+                    lb[gr][0] <= lb_in[gr];
+                    for (i = 1; i < IMG_W; i = i + 1)
+                        lb[gr][i] <= lb[gr][i-1];
+                end
+            end
+        end
+    endgenerate
+
+    //-------------------------------------------------------------------------
+    // Window registers. win[0] = oldest row (top), win[N-1] = newest (bottom).
+    // Each row shifts left; the rightmost column is fed from the stream or
+    // from the corresponding line-buffer tap.
+    //-------------------------------------------------------------------------
+    reg [PIX_W-1:0] win [0:N-1][0:N-1];
+
+    always @(posedge clk) begin
+        if (in_valid) begin
+            for (r = 0; r < N; r = r + 1) begin
+                for (c = 0; c < N-1; c = c + 1)
+                    win[r][c] <= win[r][c+1];
+            end
+            // newest row comes straight off the stream
+            win[N-1][N-1] <= in_pixel;
+            // older rows come from the line buffers:
+            // win[N-1-k] is k rows back  ->  lb_out[k-1]
+            for (r = 0; r < N-1; r = r + 1)
+                win[r][N-1] <= lb_out[N-2-r];
+        end
+    end
+
+    //-------------------------------------------------------------------------
+    // Position counters -> window validity
+    // The window is complete once we have seen N-1 full rows plus N columns.
+    //-------------------------------------------------------------------------
+    reg [$clog2(IMG_W):0] col_cnt;
+    reg [$clog2(IMG_H):0] row_cnt;
+    wire win_valid = in_valid && (row_cnt >= N-1) && (col_cnt >= N-1);
+
+    always @(posedge clk) begin
+        if (rst) begin
+            col_cnt <= 0;
+            row_cnt <= 0;
+        end else if (in_valid) begin
+            if (col_cnt == IMG_W-1) begin
+                col_cnt <= 0;
+                row_cnt <= row_cnt + 1'b1;
+            end else begin
+                col_cnt <= col_cnt + 1'b1;
+            end
+        end
+    end
+
+    //-------------------------------------------------------------------------
+    // S1 : products.  uint8 zero-extended to signed, times signed coeff.
+    //-------------------------------------------------------------------------
+    reg signed [PROD_W-1:0] prod [0:TAPS-1];
+    reg                     v1;
+
+    generate
+        for (gr = 0; gr < N; gr = gr + 1) begin : g_prow
+            for (gc = 0; gc < N; gc = gc + 1) begin : g_pcol
+                localparam integer IDX = gr*N + gc;
+                wire signed [PIX_W:0] px_s = $signed({1'b0, win[gr][gc]});
+                always @(posedge clk) begin
+                    prod[IDX] <= px_s * coeff[IDX];
+                end
+            end
+        end
+    endgenerate
+
+    // NOTE on alignment: `win` and `win_valid` both update on the same edge,
+    // so at the edge that admits pixel (r,c) the product stage still reads the
+    // window ending at (r,c-1). win_valid must therefore be delayed one cycle
+    // to line up with the data the multipliers actually see.
+    reg win_valid_q;
+    always @(posedge clk) win_valid_q <= rst ? 1'b0 : win_valid;
+    always @(posedge clk) v1          <= rst ? 1'b0 : win_valid_q;
+
+    //-------------------------------------------------------------------------
+    // S2 : row sums (N adders of N terms each - short combinational depth)
+    //-------------------------------------------------------------------------
+    reg signed [ACC_W-1:0] rsum [0:N-1];
+    reg                    v2;
+
+    generate
+        for (gr = 0; gr < N; gr = gr + 1) begin : g_rsum
+            reg signed [ACC_W-1:0] acc_c;
+            always @(*) begin
+                acc_c = {ACC_W{1'b0}};
+                for (i = 0; i < N; i = i + 1)
+                    acc_c = acc_c + $signed(prod[gr*N + i]);
+            end
+            always @(posedge clk) rsum[gr] <= acc_c;
+        end
+    endgenerate
+
+    always @(posedge clk) v2 <= rst ? 1'b0 : v1;
+
+    //-------------------------------------------------------------------------
+    // S3 : total, saturate to int16, optional ReLU
+    //-------------------------------------------------------------------------
+    reg signed [ACC_W-1:0] total;
+    always @(*) begin
+        total = {ACC_W{1'b0}};
+        for (i = 0; i < N; i = i + 1)
+            total = total + rsum[i];
+    end
+
+    wire signed [OUT_W-1:0] sat =
+        (total > $signed(OUT_MAX)) ? $signed(OUT_MAX[OUT_W-1:0]) :
+        (total < $signed(OUT_MIN)) ? $signed(OUT_MIN[OUT_W-1:0]) :
+                                     total[OUT_W-1:0];
+
+    wire signed [OUT_W-1:0] relu = (relu_en && sat < 0) ? {OUT_W{1'b0}} : sat;
+
+    always @(posedge clk) begin
+        if (rst) begin
+            out_valid <= 1'b0;
+            out_pixel <= {OUT_W{1'b0}};
+        end else begin
+            out_valid <= v2;
+            out_pixel <= relu;
+        end
+    end
+
+endmodule
+
+`default_nettype wire
