@@ -1,0 +1,41 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Fri Aug 14 23:06:58 2026
+[*]
+[dumpfile] "/home/mohamed-esam/sscs2026-conv-accel/conv_accel.vcd"
+[dumpfile_mtime] "Fri Aug 14 23:00:44 2026"
+[dumpfile_size] 540689
+[savefile] "/home/mohamed-esam/sscs2026-conv-accel/docs/figures/layout.gtkw"
+[timestart] 640000
+[size] 1854 1001
+[pos] -101 -101
+*-14.939795 669400 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_conv_accel.
+[sst_width] 278
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 297
+@28
+tb_conv_accel.dut.clk
+@22
+tb_conv_accel.dut.col_cnt[15:0]
+tb_conv_accel.dut.row_cnt[15:0]
+@25
+tb_conv_accel.dut.in_pixel[7:0]
+@28
+tb_conv_accel.dut.win_valid
+@25
+tb_conv_accel.dut.w00[7:0]
+tb_conv_accel.dut.w01[7:0]
+tb_conv_accel.dut.w02[7:0]
+tb_conv_accel.dut.w10[7:0]
+tb_conv_accel.dut.w11[7:0]
+tb_conv_accel.dut.w12[7:0]
+tb_conv_accel.dut.w20[7:0]
+tb_conv_accel.dut.w21[7:0]
+tb_conv_accel.dut.w22[7:0]
+tb_conv_accel.dut.out_valid
+@24
+tb_conv_accel.dut.out_pixel[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

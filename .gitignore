@@ -2,3 +2,4 @@ build/
 *.vcd
 vectors/
 __pycache__/
+*.jpg

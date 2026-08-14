@@ -1,0 +1,77 @@
+#=============================================================================
+# conv_top.ucf - Digilent Genesys (Xilinx Virtex-5 XC5VLX50T-1FF1136)
+# IEEE SSCS Egypt Chapter 2026 Student Design Competition
+#
+# Pin assignments taken from the working leukemia-fpga-knn top.ucf for this
+# same board. Signal mapping:
+#
+#   conv_top        Genesys resource      pin
+#   --------        ----------------      ---
+#   clk             100 MHz oscillator    AG18
+#   rst             pushbutton            G6
+#   relu_en         slide switch SW0      E7
+#   busy_led        LD0                   AG8
+#   done_led        LD1                   AH8
+#   uart_tx         RS-232 TX             AC32
+#   uart_rx         RS-232 RX             *** SEE NOTE BELOW ***
+#=============================================================================
+
+#-----------------------------------------------------------------------------
+# Clock - 100 MHz system clock
+#-----------------------------------------------------------------------------
+NET "clk" LOC = "AG18" | IOSTANDARD = LVCMOS33;
+NET "clk" TNM_NET = "clk";
+TIMESPEC TS_clk = PERIOD "clk" 10.0 ns HIGH 50%;
+
+#-----------------------------------------------------------------------------
+# Reset (active high) - pushbutton
+#-----------------------------------------------------------------------------
+NET "rst" LOC = "G6" | IOSTANDARD = LVCMOS25;
+
+#-----------------------------------------------------------------------------
+# ReLU enable - slide switch SW0
+# Up = ReLU on. Must match the --relu flag passed to host_driver.py.
+#-----------------------------------------------------------------------------
+NET "relu_en" LOC = "E7" | IOSTANDARD = LVCMOS25;
+
+#-----------------------------------------------------------------------------
+# UART - RS-232, 115200 baud, 8N1
+#
+# !!! uart_rx HAS NO PIN ASSIGNMENT YET !!!
+# The leukemia project's UCF constrains uart_tx (AC32) but NOT uart_rx, so
+# that pin was auto-placed there. Look up the RS-232 RX pin in the Digilent
+# Genesys reference manual / schematic and uncomment the line below.
+# Without it, ngdbuild will auto-place uart_rx and the board WILL NOT
+# receive data correctly.
+#-----------------------------------------------------------------------------
+NET "uart_tx" LOC = "AC32" | IOSTANDARD = LVCMOS33;
+NET "uart_rx" LOC = "AB32" | IOSTANDARD = LVCMOS33;
+
+#-----------------------------------------------------------------------------
+# Status LEDs
+#-----------------------------------------------------------------------------
+NET "busy_led" LOC = "AG8" | IOSTANDARD = LVCMOS25;   # LD0 - processing
+NET "done_led" LOC = "AH8" | IOSTANDARD = LVCMOS25;   # LD1 - frame complete
+
+#-----------------------------------------------------------------------------
+# Asynchronous inputs - exclude from timing analysis.
+# uart_rx passes through a two-flop synchroniser inside uart_rx.v; rst and
+# relu_en are static during operation. None need to meet setup/hold.
+#-----------------------------------------------------------------------------
+NET "uart_rx" TIG;
+NET "relu_en" TIG;
+NET "rst"     TIG;
+
+#-----------------------------------------------------------------------------
+# DSP inference control
+#
+#   FOM = Throughput / (Power x (LUTs + 50*DSPs + 100*BRAMs))
+#
+# Measured DSP48E build: 305 LUTs + 9 DSPs -> 305 + 450 = 755 resource cost.
+# The DSPs are 60% of that denominator, so a LUT-multiplier build wins if the
+# nine multipliers cost less than ~450 extra LUTs.
+#
+# To force LUT implementation:
+#   Process > Synthesize - XST > Properties > HDL Options
+#     "DSP Utilization Ratio" = 0
+#=============================================================================
