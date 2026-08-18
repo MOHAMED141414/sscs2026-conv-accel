@@ -5,14 +5,14 @@ Parameter TMPDIR set to xst/projnav.tmp
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.04 secs
+Total CPU time to Xst completion: 0.06 secs
  
 --> 
 Parameter xsthdpdir set to xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.04 secs
+Total CPU time to Xst completion: 0.06 secs
  
 --> 
 Reading design: conv_top.prj
@@ -318,37 +318,37 @@ Synthesizing Unit <conv_accel>.
     Found 256-bit register for signal <lb0>.
     Found 256-bit register for signal <lb1>.
     Found 17-bit register for signal <p0>.
-    Found 9x8-bit multiplier for signal <p0$mult0000> created at line 171.
+    Found 9x8-bit multiplier for signal <p0$mult0000> created at line 172.
     Found 17-bit register for signal <p1>.
-    Found 9x8-bit multiplier for signal <p1$mult0000> created at line 172.
+    Found 9x8-bit multiplier for signal <p1$mult0000> created at line 173.
     Found 17-bit register for signal <p2>.
-    Found 9x8-bit multiplier for signal <p2$mult0000> created at line 173.
+    Found 9x8-bit multiplier for signal <p2$mult0000> created at line 174.
     Found 17-bit register for signal <p3>.
-    Found 9x8-bit multiplier for signal <p3$mult0000> created at line 174.
+    Found 9x8-bit multiplier for signal <p3$mult0000> created at line 175.
     Found 17-bit register for signal <p4>.
-    Found 9x8-bit multiplier for signal <p4$mult0000> created at line 175.
+    Found 9x8-bit multiplier for signal <p4$mult0000> created at line 176.
     Found 17-bit register for signal <p5>.
-    Found 9x8-bit multiplier for signal <p5$mult0000> created at line 176.
+    Found 9x8-bit multiplier for signal <p5$mult0000> created at line 177.
     Found 17-bit register for signal <p6>.
-    Found 9x8-bit multiplier for signal <p6$mult0000> created at line 177.
+    Found 9x8-bit multiplier for signal <p6$mult0000> created at line 178.
     Found 17-bit register for signal <p7>.
-    Found 9x8-bit multiplier for signal <p7$mult0000> created at line 178.
+    Found 9x8-bit multiplier for signal <p7$mult0000> created at line 179.
     Found 17-bit register for signal <p8>.
-    Found 9x8-bit multiplier for signal <p8$mult0000> created at line 179.
+    Found 9x8-bit multiplier for signal <p8$mult0000> created at line 180.
     Found 16-bit up counter for signal <row_cnt>.
     Found 22-bit register for signal <rs0>.
-    Found 19-bit adder for signal <rs0$add0000> created at line 191.
-    Found 18-bit adder for signal <rs0$add0001> created at line 191.
+    Found 19-bit adder for signal <rs0$add0000> created at line 192.
+    Found 18-bit adder for signal <rs0$add0001> created at line 192.
     Found 22-bit register for signal <rs1>.
-    Found 19-bit adder for signal <rs1$add0000> created at line 192.
-    Found 18-bit adder for signal <rs1$add0001> created at line 192.
+    Found 19-bit adder for signal <rs1$add0000> created at line 193.
+    Found 18-bit adder for signal <rs1$add0001> created at line 193.
     Found 22-bit register for signal <rs2>.
-    Found 19-bit adder for signal <rs2$add0000> created at line 193.
-    Found 18-bit adder for signal <rs2$add0001> created at line 193.
-    Found 23-bit comparator greater for signal <sat$cmp_gt0000> created at line 203.
-    Found 32-bit comparator less for signal <sat$cmp_lt0000> created at line 203.
+    Found 19-bit adder for signal <rs2$add0000> created at line 194.
+    Found 18-bit adder for signal <rs2$add0001> created at line 194.
+    Found 23-bit comparator greater for signal <sat$cmp_gt0000> created at line 204.
+    Found 32-bit comparator less for signal <sat$cmp_lt0000> created at line 204.
     Found 22-bit adder for signal <total>.
-    Found 22-bit adder for signal <total$addsub0000> created at line 201.
+    Found 22-bit adder for signal <total$addsub0000> created at line 202.
     Found 1-bit register for signal <v1>.
     Found 1-bit register for signal <v2>.
     Found 8-bit register for signal <w00>.
@@ -360,8 +360,8 @@ Synthesizing Unit <conv_accel>.
     Found 8-bit register for signal <w20>.
     Found 8-bit register for signal <w21>.
     Found 8-bit register for signal <w22>.
-    Found 16-bit comparator greatequal for signal <win_valid$cmp_ge0000> created at line 133.
-    Found 16-bit comparator greatequal for signal <win_valid$cmp_ge0001> created at line 133.
+    Found 16-bit comparator greatequal for signal <win_valid$cmp_ge0000> created at line 134.
+    Found 16-bit comparator greatequal for signal <win_valid$cmp_ge0001> created at line 134.
     Found 1-bit register for signal <win_valid_q>.
 INFO:Xst:738 - HDL ADVISOR - 256 flip-flops were inferred for signal <lb0>. You may be trying to describe a RAM in a way that is incompatible with block and distributed RAM resources available on Xilinx devices, or with a specific template that is not supported. Please review the Xilinx resources documentation and the XST user manual for coding guidelines. Taking advantage of RAM resources will lead to improved device usage and reduced synthesis time.
 INFO:Xst:738 - HDL ADVISOR - 256 flip-flops were inferred for signal <lb1>. You may be trying to describe a RAM in a way that is incompatible with block and distributed RAM resources available on Xilinx devices, or with a specific template that is not supported. Please review the Xilinx resources documentation and the XST user manual for coding guidelines. Taking advantage of RAM resources will lead to improved device usage and reduced synthesis time.
@@ -394,22 +394,24 @@ Synthesizing Unit <conv_top>.
     Found 16-bit up counter for signal <coef_cnt>.
     Found 8-bit register for signal <coef_din>.
     Found 1-bit register for signal <coef_we>.
+    Found 1-bit register for signal <frame_rst>.
     Found 8-bit register for signal <in_pixel>.
     Found 1-bit register for signal <in_valid>.
     Found 1-bit register for signal <pend_clr>.
     Found 16-bit register for signal <pend_data>.
     Found 1-bit register for signal <pend_valid>.
-    Found 16-bit up counter for signal <pix_cnt>.
+    Found 16-bit register for signal <pix_cnt>.
+    Found 16-bit adder for signal <pix_cnt$addsub0000> created at line 169.
     Found 8-bit register for signal <tx_data>.
     Found 1-bit register for signal <tx_sent>.
     Found 1-bit register for signal <tx_start>.
     Found 4-bit register for signal <wait_cnt>.
-    Found 4-bit adder for signal <wait_cnt$addsub0000> created at line 177.
+    Found 4-bit adder for signal <wait_cnt$addsub0000> created at line 180.
     Summary:
 	inferred   1 Finite State Machine(s).
-	inferred   2 Counter(s).
-	inferred  55 D-type flip-flop(s).
-	inferred   1 Adder/Subtractor(s).
+	inferred   1 Counter(s).
+	inferred  72 D-type flip-flop(s).
+	inferred   2 Adder/Subtractor(s).
 Unit <conv_top> synthesized.
 
 INFO:Xst:1767 - HDL ADVISOR - Resource sharing has identified that some arithmetic operations in this design can share the same physical resources for reduced device utilization. For improved clock frequency you may try to disable resource sharing.
@@ -420,18 +422,18 @@ HDL Synthesis Report
 Macro Statistics
 # Multipliers                                          : 9
  9x8-bit multiplier                                    : 9
-# Adders/Subtractors                                   : 13
- 16-bit adder                                          : 2
+# Adders/Subtractors                                   : 14
+ 16-bit adder                                          : 3
  18-bit adder                                          : 3
  19-bit adder                                          : 3
  22-bit adder                                          : 2
  3-bit adder                                           : 2
  4-bit adder                                           : 1
-# Counters                                             : 4
- 16-bit up counter                                     : 4
-# Registers                                            : 70
- 1-bit register                                        : 25
- 16-bit register                                       : 4
+# Counters                                             : 3
+ 16-bit up counter                                     : 3
+# Registers                                            : 72
+ 1-bit register                                        : 26
+ 16-bit register                                       : 5
  17-bit register                                       : 9
  22-bit register                                       : 3
  256-bit register                                      : 2
@@ -561,15 +563,15 @@ Macro Statistics
  9x8-to-19-bit MAC                                     : 3
 # Multipliers                                          : 3
  9x8-bit registered multiplier                         : 3
-# Adders/Subtractors                                   : 7
- 16-bit adder                                          : 2
+# Adders/Subtractors                                   : 8
+ 16-bit adder                                          : 3
  22-bit adder                                          : 2
  3-bit adder                                           : 2
  4-bit adder                                           : 1
-# Counters                                             : 4
- 16-bit up counter                                     : 4
-# Registers                                            : 679
- Flip-Flops                                            : 679
+# Counters                                             : 3
+ 16-bit up counter                                     : 3
+# Registers                                            : 696
+ Flip-Flops                                            : 696
 # Comparators                                          : 6
  16-bit comparator greatequal                          : 2
  16-bit comparator less                                : 2
@@ -610,7 +612,7 @@ Optimizing unit <conv_accel> ...
 
 Mapping all equations...
 Building and optimizing final netlist ...
-Found area constraint ratio of 100 (+ 5) on block conv_top, actual ratio is 3.
+Found area constraint ratio of 100 (+ 5) on block conv_top, actual ratio is 4.
 
 Final Macro Processing ...
 
@@ -638,8 +640,8 @@ Unit <conv_top> processed.
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 257
- Flip-Flops                                            : 257
+# Registers                                            : 258
+ Flip-Flops                                            : 258
 # Shift Registers                                      : 17
  2-bit shift register                                  : 1
  30-bit shift register                                 : 16
@@ -671,24 +673,24 @@ Design Statistics
 # IOs                              : 7
 
 Cell Usage :
-# BELS                             : 523
+# BELS                             : 543
 #      GND                         : 1
-#      INV                         : 6
+#      INV                         : 7
 #      LUT1                        : 90
-#      LUT2                        : 10
-#      LUT3                        : 34
-#      LUT4                        : 47
+#      LUT2                        : 12
+#      LUT3                        : 31
+#      LUT4                        : 66
 #      LUT5                        : 20
 #      LUT6                        : 83
 #      MUXCY                       : 111
-#      MUXF7                       : 2
+#      MUXF7                       : 3
 #      VCC                         : 1
 #      XORCY                       : 118
-# FlipFlops/Latches                : 274
-#      FD                          : 13
+# FlipFlops/Latches                : 275
+#      FD                          : 14
 #      FDE                         : 65
-#      FDR                         : 71
-#      FDRE                        : 108
+#      FDR                         : 87
+#      FDRE                        : 92
 #      FDRS                        : 15
 #      FDS                         : 2
 # Shift Registers                  : 17
@@ -710,17 +712,17 @@ Selected Device : 5vlx50tff1136-1
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:             274  out of  28800     0%  
- Number of Slice LUTs:                  307  out of  28800     1%  
-    Number used as Logic:               290  out of  28800     1%  
+ Number of Slice Registers:             275  out of  28800     0%  
+ Number of Slice LUTs:                  326  out of  28800     1%  
+    Number used as Logic:               309  out of  28800     1%  
     Number used as Memory:               17  out of   7680     0%  
        Number used as SRL:               17
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:    392
-   Number with an unused Flip Flop:     118  out of    392    30%  
-   Number with an unused LUT:            85  out of    392    21%  
-   Number of fully used LUT-FF pairs:   189  out of    392    48%  
+ Number of LUT Flip Flop pairs used:    411
+   Number with an unused Flip Flop:     136  out of    411    33%  
+   Number with an unused LUT:            85  out of    411    20%  
+   Number of fully used LUT-FF pairs:   190  out of    411    46%  
    Number of unique control sets:        14
 
 IO Utilization: 
@@ -752,7 +754,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-clk                                | BUFGP                  | 300   |
+clk                                | BUFGP                  | 301   |
 -----------------------------------+------------------------+-------+
 
 Asynchronous Control Signals Information:
@@ -764,8 +766,8 @@ Timing Summary:
 Speed Grade: -1
 
    Minimum period: 5.006ns (Maximum Frequency: 199.760MHz)
-   Minimum input arrival time before clock: 2.845ns
-   Maximum output required time after clock: 4.539ns
+   Minimum input arrival time before clock: 2.839ns
+   Maximum output required time after clock: 3.937ns
    Maximum combinational path delay: No path found
 
 Timing Detail:
@@ -775,7 +777,7 @@ All values displayed in nanoseconds (ns)
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clk'
   Clock period: 5.006ns (frequency: 199.760MHz)
-  Total number of paths / destination ports: 44952 / 929
+  Total number of paths / destination ports: 45055 / 949
 -------------------------------------------------------------------------
 Delay:               5.006ns (Levels of Logic = 17)
   Source:            u_core/Maddsub_p8_mult0000 (DSP)
@@ -803,7 +805,7 @@ Delay:               5.006ns (Levels of Logic = 17)
      MUXCY:CI->O           1   0.026   0.000  u_core/Madd_total_Madd_cy<13> (u_core/Madd_total_Madd_cy<13>)
      MUXCY:CI->O           1   0.026   0.000  u_core/Madd_total_Madd_cy<14> (u_core/Madd_total_Madd_cy<14>)
      XORCY:CI->O           2   0.357   0.581  u_core/Madd_total_Madd_xor<15> (u_core/total<15>)
-     LUT2:I0->O            1   0.094   0.480  u_core/relu<0>2_SW0 (N19)
+     LUT2:I0->O            1   0.094   0.480  u_core/relu<0>2_SW0 (N24)
      LUT6:I5->O           15   0.094   0.413  u_core/relu<0>2 (u_core/N2)
      FDRS:S                    0.573          u_core/out_pixel_14
     ----------------------------------------
@@ -812,9 +814,9 @@ Delay:               5.006ns (Levels of Logic = 17)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
-  Total number of paths / destination ports: 234 / 234
+  Total number of paths / destination ports: 235 / 235
 -------------------------------------------------------------------------
-Offset:              2.845ns (Levels of Logic = 2)
+Offset:              2.839ns (Levels of Logic = 2)
   Source:            rst (PAD)
   Destination:       coef_cnt_0 (FF)
   Destination Clock: clk rising
@@ -823,43 +825,43 @@ Offset:              2.845ns (Levels of Logic = 2)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O           173   0.818   0.942  rst_IBUF (rst_IBUF)
-     LUT4:I0->O           16   0.094   0.418  coef_cnt_or00001 (coef_cnt_or0000)
-     FDRE:R                    0.573          coef_cnt_0
+     IBUF:I->O           140   0.818   0.936  rst_IBUF (rst_IBUF)
+     LUT4:I0->O           16   0.094   0.418  u_core/col_cnt_or00001 (u_core/col_cnt_or0000)
+     FDRE:R                    0.573          u_core/col_cnt_0
     ----------------------------------------
-    Total                      2.845ns (1.485ns logic, 1.360ns route)
-                                       (52.2% logic, 47.8% route)
+    Total                      2.839ns (1.485ns logic, 1.354ns route)
+                                       (52.3% logic, 47.7% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
-  Total number of paths / destination ports: 8 / 3
+  Total number of paths / destination ports: 3 / 3
 -------------------------------------------------------------------------
-Offset:              4.539ns (Levels of Logic = 2)
-  Source:            state_FSM_FFd5 (FF)
+Offset:              3.937ns (Levels of Logic = 2)
+  Source:            state_FSM_FFd2 (FF)
   Destination:       busy_led (PAD)
   Source Clock:      clk rising
 
-  Data Path: state_FSM_FFd5 to busy_led
+  Data Path: state_FSM_FFd2 to busy_led
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDR:C->Q             23   0.471   1.186  state_FSM_FFd5 (state_FSM_FFd5)
-     LUT6:I0->O            1   0.094   0.336  busy_led1 (busy_led_OBUF)
+     FDR:C->Q             20   0.471   0.440  state_FSM_FFd2 (state_FSM_FFd2)
+     INV:I->O              1   0.238   0.336  state_FSM_Out101_INV_0 (busy_led_OBUF)
      OBUF:I->O                 2.452          busy_led_OBUF (busy_led)
     ----------------------------------------
-    Total                      4.539ns (3.017ns logic, 1.522ns route)
-                                       (66.5% logic, 33.5% route)
+    Total                      3.937ns (3.161ns logic, 0.776ns route)
+                                       (80.3% logic, 19.7% route)
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 13.00 secs
-Total CPU time to Xst completion: 13.09 secs
+Total REAL time to Xst completion: 16.00 secs
+Total CPU time to Xst completion: 16.13 secs
  
 --> 
 
 
-Total memory usage is 571316 kilobytes
+Total memory usage is 571460 kilobytes
 
 Number of errors   :    0 (   0 filtered)
 Number of warnings :    0 (   0 filtered)
