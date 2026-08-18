@@ -58,6 +58,7 @@ module conv_accel #(
 
     // ---- control ----------------------------------------------------------
     input  wire                      relu_en,
+    input  wire                      frame_rst,  // resets counters/valid for next kernel pass
 
     // ---- pixel stream in --------------------------------------------------
     input  wire                      in_valid,
@@ -133,7 +134,7 @@ module conv_accel #(
     wire win_valid = in_valid && (row_cnt >= 2) && (col_cnt >= 2);
 
     always @(posedge clk) begin
-        if (rst) begin
+        if (rst || frame_rst) begin
             col_cnt <= 16'd0;
             row_cnt <= 16'd0;
         end else if (in_valid) begin
@@ -179,8 +180,8 @@ module conv_accel #(
         p8 <= x22 * c8;
     end
 
-    always @(posedge clk) win_valid_q <= rst ? 1'b0 : win_valid;
-    always @(posedge clk) v1          <= rst ? 1'b0 : win_valid_q;
+    always @(posedge clk) win_valid_q <= (rst || frame_rst) ? 1'b0 : win_valid;
+    always @(posedge clk) v1          <= (rst || frame_rst) ? 1'b0 : win_valid_q;
 
     //-------------------------------------------------------------------------
     // S2 : three row sums (3-term adders keep combinational depth short)
@@ -208,7 +209,7 @@ module conv_accel #(
     wire signed [OUT_W-1:0] relu = (relu_en && sat[OUT_W-1]) ? {OUT_W{1'b0}} : sat;
 
     always @(posedge clk) begin
-        if (rst) begin
+        if (rst || frame_rst) begin
             out_valid <= 1'b0;
             out_pixel <= {OUT_W{1'b0}};
         end else begin

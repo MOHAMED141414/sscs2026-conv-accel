@@ -73,11 +73,12 @@ module conv_top #(
     reg  [7:0]              in_pixel;
     wire                    out_valid;
     wire signed [15:0]      out_pixel;
+    reg                     frame_rst;    // resets core counters between kernel passes
 
     conv_accel #(.IMG_W(IMG_W), .IMG_H(IMG_H), .N(N)) u_core (
         .clk(clk), .rst(rst),
         .coef_we(coef_we), .coef_addr(coef_addr), .coef_din(coef_din),
-        .relu_en(relu_en),
+        .relu_en(relu_en), .frame_rst(frame_rst),
         .in_valid(in_valid), .in_pixel(in_pixel),
         .out_valid(out_valid), .out_pixel(out_pixel));
 
@@ -127,13 +128,15 @@ module conv_top #(
             pix_cnt   <= 0;
             wait_cnt  <= 4'd0;
             tx_sent   <= 1'b0;
+            frame_rst <= 1'b0;
             done_led  <= 1'b0;
         end else begin
             // default strobes
-            coef_we  <= 1'b0;
-            in_valid <= 1'b0;
-            tx_start <= 1'b0;
-            pend_clr <= 1'b0;
+            coef_we   <= 1'b0;
+            in_valid  <= 1'b0;
+            tx_start  <= 1'b0;
+            pend_clr  <= 1'b0;
+            frame_rst <= 1'b0;
 
             case (state)
                 // ---- load N*N kernel coefficients ------------------------
@@ -211,8 +214,12 @@ module conv_top #(
                     end
                 end
 
+                // ---- frame complete: signal done, reset core, await next kernel --
                 S_DONE: begin
-                    done_led <= 1'b1;
+                    done_led  <= 1'b1;
+                    frame_rst <= 1'b1;    // reset core counters for next pass
+                    pix_cnt   <= 16'd0;   // ready for next image stream
+                    state     <= S_COEF;  // accept another kernel immediately
                 end
 
                 default: state <= S_COEF;

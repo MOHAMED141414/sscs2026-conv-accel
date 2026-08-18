@@ -43,7 +43,7 @@ module tb_conv_accel;
     ) dut (
         .clk(clk), .rst(rst),
         .coef_we(coef_we), .coef_addr(coef_addr), .coef_din(coef_din),
-        .relu_en(relu_en),
+        .relu_en(relu_en), .frame_rst(1'b0),
         .in_valid(in_valid), .in_pixel(in_pixel),
         .out_valid(out_valid), .out_pixel(out_pixel)
     );
