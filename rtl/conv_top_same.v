@@ -82,6 +82,12 @@ module conv_top #(
     wire f_empty = (f_cnt == 0);
     wire f_full  = (f_cnt == FD);
 
+    // TX-side state, declared here (ahead of its normal section below) only
+    // because fifo_pop needs to reference it -- Verilog requires declaration
+    // before use for wires computed from these regs.
+    reg        tx_lo_phase;
+    reg        tx_sent;
+
     wire fifo_push = out_valid && !f_full;
     wire fifo_pop  = tx_lo_phase && tx_sent && tx_done;
     // fifo_pop mirrors the exact condition that fires f_rd<=f_rd+1 below
@@ -110,8 +116,6 @@ module conv_top #(
     end
 
     // ---- TX state machine (drains FIFO over UART, 2 bytes/result) -----------
-    reg        tx_lo_phase;
-    reg        tx_sent;
     reg [15:0] tx_word;
     reg [15:0] tx_out_cnt;
 
