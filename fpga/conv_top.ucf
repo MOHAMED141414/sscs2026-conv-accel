@@ -44,8 +44,8 @@ NET "relu_en" LOC = "E7" | IOSTANDARD = LVCMOS25;
 # Without it, ngdbuild will auto-place uart_rx and the board WILL NOT
 # receive data correctly.
 #-----------------------------------------------------------------------------
-NET "uart_tx" LOC = "AC32" | IOSTANDARD = LVCMOS33;
-NET "uart_rx" LOC = "AB32" | IOSTANDARD = LVCMOS33;
+NET "uart_tx" LOC = "AD11" | IOSTANDARD = LVCMOS25;
+NET "uart_rx" LOC = "AD9" | IOSTANDARD = LVCMOS25;
 
 #-----------------------------------------------------------------------------
 # Status LEDs
