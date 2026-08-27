@@ -37,6 +37,8 @@ module tb_same_core_check;
     reg started;
 
     initial begin
+        $dumpfile("same_core.vcd");
+        $dumpvars(0, tb_same_core_check); 
         $readmemh("vectors/kernel_sobel_x.hex", ker);
         $readmemh("vectors/img_ramp.hex", img);
         $readmemh("vectors_same_hw/exp_ramp__sobel_x.hex", exp);
