@@ -82,13 +82,30 @@ module conv_top #(
     wire f_empty = (f_cnt == 0);
     wire f_full  = (f_cnt == FD);
 
+    wire fifo_push = out_valid && !f_full;
+    wire fifo_pop  = tx_lo_phase && tx_sent && tx_done;
+    // fifo_pop mirrors the exact condition that fires f_rd<=f_rd+1 below
+    // (the LO-byte tx_done branch) -- kept in sync manually since XST does
+    // not allow the same reg to be written from two always blocks.
+
     always @(posedge clk) begin
         if (rst || frame_rst) begin
-            f_wr <= 0; f_cnt <= 0;
-        end else if (out_valid && !f_full) begin
+            f_wr <= 0;
+        end else if (fifo_push) begin
             fifo[f_wr[4:0]] <= out_pixel;
-            f_wr  <= f_wr + 1'b1;
-            f_cnt <= f_cnt + 1'b1;
+            f_wr <= f_wr + 1'b1;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (rst || frame_rst) begin
+            f_cnt <= 0;
+        end else begin
+            case ({fifo_push, fifo_pop})
+                2'b10:   f_cnt <= f_cnt + 1'b1;
+                2'b01:   f_cnt <= f_cnt - 1'b1;
+                default: f_cnt <= f_cnt; // 00: no change, 11: net zero
+            endcase
         end
     end
 
@@ -124,7 +141,6 @@ module conv_top #(
                     tx_sent     <= 1'b0;
                     tx_out_cnt  <= tx_out_cnt + 1'b1;
                     f_rd        <= f_rd + 1'b1;
-                    f_cnt       <= f_cnt - 1'b1;
                 end
             end
         end
