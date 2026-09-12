@@ -1,0 +1,10 @@
+Command line:
+   power_same_pr_isim
+     -simmode  tcl
+     -simrunnum  0
+     -socket  41177
+
+Sat Sep 12 00:42:53 2026
+
+
+ Elaboration Time: 0.24 sec

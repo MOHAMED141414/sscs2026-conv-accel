@@ -1,0 +1,2 @@
+verilog work /opt/xilinx/Xilinx_ISE_DS_Lin_14.7_1015_1/conv_accel_dsp/conv_top_timesim.v
+verilog work tb/tb_power_valid_toplevel.v

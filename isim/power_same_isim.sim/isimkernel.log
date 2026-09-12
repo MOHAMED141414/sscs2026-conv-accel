@@ -1,0 +1,29 @@
+Command line:
+   power_same_isim
+     -simmode  tcl
+     -simrunnum  0
+     -socket  57849
+
+Fri Sep 11 00:28:52 2026
+
+
+ Elaboration Time: 0.01 sec
+
+ Current Memory Usage: 159.998 Meg
+
+ Total Signals          : 29
+ Total Nets             : 206
+ Total Signal Drivers   : 29
+ Total Blocks           : 2
+ Total Primitive Blocks : 1
+ Total Processes        : 43
+ Total Traceable Variables  : 68
+ Total Scalar Nets and Variables : 9937
+Total Line Count : 99
+
+ Total Simulation Time: 0.11 sec
+
+ Current Memory Usage: 235.5 Meg
+
+Fri Sep 11 00:28:53 2026
+

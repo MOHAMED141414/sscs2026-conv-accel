@@ -1,0 +1,44 @@
+Running: /opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64/unwrapped/fuse -intstyle ise -incremental -o power_same_pr_isim -prj power_same_pr.prj tb_power_same_toplevel glbl -L simprims_ver 
+ISim P.20131013 (signature 0xfbc00daa)
+Number of CPUs detected in this system: 8
+Turning on mult-threading, number of parallel sub-compilation jobs: 16 
+Determining compilation order of HDL files
+Analyzing Verilog file "/opt/xilinx/Xilinx_ISE_DS_Lin_14.7_1015_1/conv_accel_same/conv_top_timesim.v" into library work
+Analyzing Verilog file "tb/tb_power_same_toplevel.v" into library work
+Starting static elaboration
+Completed static elaboration
+Fuse Memory Usage: 104416 KB
+Fuse CPU Usage: 1210 ms
+Compiling module sffsrce
+Compiling module X_SFF
+Compiling module X_LUT6(INIT=64'b1111111100000000...
+Compiling module X_LUT5
+Compiling module X_ZERO
+Compiling module X_CARRY4
+Compiling module X_BUF
+Compiling module X_IPAD
+Compiling module X_OPAD
+Compiling module X_OBUF
+Compiling module X_DSP48E(ACASCREG=0,ALUMODEREG=0...
+Compiling module X_DSP48E(ACASCREG=0,ALUMODEREG=0...
+Compiling module X_DSP48E(ALUMODEREG=0,CARRYINREG...
+Compiling module ffsrce
+Compiling module X_FF
+Compiling module X_SRLC32E
+Compiling module X_SRLC16E
+Compiling module X_RAMD32
+Compiling module mux
+Compiling module X_MUX2
+Compiling module X_SFF(INIT=1'b1)
+Compiling module X_CKBUF
+Compiling module X_ONE
+Compiling module conv_top
+Compiling module tb_power_same_toplevel
+Compiling module glbl
+Time Resolution for simulation is 1ps.
+Waiting for 1 sub-compilation(s) to finish...
+Compiled 573 Verilog Units
+Built simulation executable power_same_pr_isim
+Fuse Memory Usage: 1211424 KB
+Fuse CPU Usage: 2670 ms
+GCC CPU Usage: 1320 ms
