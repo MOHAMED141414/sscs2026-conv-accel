@@ -1,1 +1,0 @@
--intstyle "ise" -incremental -o "power_same_pr_isim" -prj "power_same_pr.prj" "tb_power_same_toplevel" "glbl" -L "simprims_ver" 

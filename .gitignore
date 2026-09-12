@@ -3,3 +3,13 @@ build/
 vectors/
 __pycache__/
 *.jpg
+
+# ISim build artifacts -- never commit these
+isim/
+*.sdb
+*.wdb
+*.log
+*.xmsgs
+fuseRelaunch.cmd
+_xmsgs/
+*.sim/
